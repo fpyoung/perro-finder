@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f8fc;
+  --foreground: #0c2846;
+  --brand-blue: #0a5ea8;
+  --brand-blue-dark: #084a84;
+  --brand-red: #ef2b2d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-brand-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #020617;
+    --foreground: #e2e8f0;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-brand-sans), Arial, Helvetica, sans-serif;
+}
+
+.input-field {
+  @apply w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100;
+}
+
+.btn-primary {
+  @apply w-full rounded-xl px-4 py-3 text-sm font-bold text-white transition active:scale-[0.99];
+  background: var(--brand-blue);
+}
+
+.btn-primary:hover {
+  background: var(--brand-blue-dark);
+}
+
+.btn-secondary {
+  @apply w-full rounded-xl px-4 py-3 text-sm font-bold text-slate-800 transition active:scale-[0.99];
+  background: #e8eef6;
+}
+
+.btn-secondary:hover {
+  background: #d9e4f2;
+}
+
+.brand-hero {
+  background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-dark) 100%);
+}
+
+.brand-accent {
+  color: var(--brand-red);
+}
+
+.card-animated {
+  animation: cardEnter 420ms ease-out;
+}
+
+.soft-pulse {
+  animation: softPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 43, 45, 0.18);
+  }
+  50% {
+    transform: scale(1.01);
+    box-shadow: 0 0 0 8px rgba(239, 43, 45, 0.02);
+  }
+}
