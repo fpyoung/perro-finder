@@ -57,6 +57,11 @@ function normalizePhoneForWhatsApp(phone: string) {
   return phone.replace(/[^\d]/g, "");
 }
 
+function isMobileDevice() {
+  if (typeof navigator === "undefined") return false;
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+}
+
 function DogPageContent() {
   const searchParams = useSearchParams();
   const qrDogId = searchParams.get("dogId")?.trim() || "";
@@ -102,7 +107,9 @@ function DogPageContent() {
 
     const message = `${contactMessage.trim()} Estoy en: ${locationLabel}`;
     const phone = normalizePhoneForWhatsApp(selectedDog.ownerPhone);
-    const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    const encodedMessage = encodeURIComponent(message);
+    const waWebUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
+    const waAppUrl = `whatsapp://send?phone=${phone}&text=${encodedMessage}`;
 
     const encounter: Encounter = {
       id: `enc-${Date.now()}`,
@@ -129,8 +136,16 @@ function DogPageContent() {
     setDogs(nextDogs);
     setEncounters(nextEncounters);
     saveData(nextDogs, nextEncounters);
-    window.open(waUrl, "_blank", "noopener,noreferrer");
-    setContactStatus("WhatsApp abierto. Encuentro guardado.");
+    if (isMobileDevice()) {
+      window.location.href = waAppUrl;
+      window.setTimeout(() => {
+        window.location.href = waWebUrl;
+      }, 1200);
+      setContactStatus("Abriendo WhatsApp en tu celular...");
+    } else {
+      window.open(waWebUrl, "_blank", "noopener,noreferrer");
+      setContactStatus("WhatsApp Web abierto. Encuentro guardado.");
+    }
   }
 
   return (
