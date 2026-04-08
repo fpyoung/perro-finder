@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, FormEvent, Suspense, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -84,7 +84,7 @@ function generatePin() {
   return `${Math.floor(1000 + Math.random() * 9000)}`;
 }
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const qrDogId = searchParams.get("dogId")?.trim() || "";
@@ -243,5 +243,23 @@ export default function Home() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 text-slate-900">
+          <main className="mx-auto w-full max-w-2xl px-4 py-6 sm:px-6">
+            <section className="rounded-2xl bg-white p-5 shadow-sm">
+              <p className="text-sm text-slate-700">Cargando...</p>
+            </section>
+          </main>
+        </div>
+      }
+    >
+      <HomeContent />
+    </Suspense>
   );
 }
