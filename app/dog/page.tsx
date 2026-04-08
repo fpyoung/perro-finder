@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, Suspense, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -57,7 +57,7 @@ function normalizePhoneForWhatsApp(phone: string) {
   return phone.replace(/[^\d]/g, "");
 }
 
-export default function DogPage() {
+function DogPageContent() {
   const searchParams = useSearchParams();
   const qrDogId = searchParams.get("dogId")?.trim() || "";
   const [initialData] = useState(() => loadData());
@@ -205,5 +205,21 @@ export default function DogPage() {
         </section>
       )}
     </main>
+  );
+}
+
+export default function DogPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="mx-auto min-h-screen w-full max-w-3xl bg-slate-50 px-4 py-6 sm:px-6">
+          <section className="rounded-2xl bg-white p-5 shadow-sm">
+            <p className="text-sm text-slate-700">Cargando...</p>
+          </section>
+        </main>
+      }
+    >
+      <DogPageContent />
+    </Suspense>
   );
 }
